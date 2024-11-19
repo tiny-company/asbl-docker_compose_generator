@@ -1,0 +1,42 @@
+---
+# Description : fix ownership on docker volume
+# file : _fix_volume_right.yml
+
+- name: get volumes list
+  ansible.builtin.set_fact:
+    volume_list: "{{ item.volumes }}"
+  loop: "{{ containers }}"
+  when: item.volumes is defined
+
+# - name: debug volume list
+#   ansible.builtin.debug:
+#     var: volume_list
+
+- name: make sure volume path exist (if not create it)
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.file:
+    path: "{{ item.volume_path | split(':') | first }}"
+    owner: "{{ item.volume_user }}"
+    state: directory
+  loop: "{{ volume_list }}"
+  when: volume_list is defined and item.volume_map_type == "folder"
+
+- name: make sure volume path exist (if not create it)
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.file:
+    path: "{{ item.volume_path | split(':') | first | dirname }}"
+    owner: "{{ item.volume_user }}"
+    state: directory
+  loop: "{{ volume_list }}"
+  when: volume_list is defined and item.volume_map_type == "file"
+
+- name: change volumes path ownership
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.file:
+    path: "{{ item.volume_path | split(':') | first }}"
+    owner: "{{ item.volume_user }}"
+  loop: "{{ volume_list }}"
+  when: volume_list is defined

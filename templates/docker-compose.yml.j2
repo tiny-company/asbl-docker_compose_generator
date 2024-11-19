@@ -1,0 +1,258 @@
+---
+version: "{{ compose_schema_version | default('2') }}"
+services:
+{% for container in containers %}
+{% if container.active %}
+
+  {{ container.service_name }}:
+    image: {{ container.image }}
+{% if container.runtime is defined %}
+    runtime: {{ container.runtime }}
+{% endif %}
+    container_name: {{ container.container_name | default(container.service_name) }}
+{% if container.extra_hosts is defined %}
+    extra_hosts:
+{% for host in container.extra_hosts %}
+      - {{ host }}
+{% endfor %}
+{% if container.user is defined %}
+    user: {{ container.user }}
+{% endif %}
+{% endif %}
+{% if container.networks is defined %}
+    networks:
+{% for network in container.networks %}
+      - {{ network }}
+{% endfor %}
+{% endif %}
+{% if container.network_mode is defined %}
+    network_mode: {{ container.network_mode }}
+{% endif %}
+{% if container.build is defined %}
+    build: {{ container.build }}
+{% endif %}
+{% if container.privileged is defined %}
+    privileged: {{ container.privileged }}
+{% endif %}
+{% if container.cap_add is defined %}
+    cap_add:
+{% for cap in container.cap_add %}
+      - {{ cap }}
+{% endfor %}
+{% endif %}
+{% if container.group_add is defined %}
+    group_add:
+{% for group in container.group_add %}
+      - {{ group }}
+{% endfor %}
+{% endif %}
+{% if container.devices is defined %}
+    devices:
+{% for device in container.devices %}
+      - {{ device }}
+{% endfor %}
+{% endif %}
+{% if container.volumes is defined %}
+    volumes:
+{% for volume in container.volumes %}
+{% if volume.volume_right is defined %}
+      - {{ volume.volume_path }}:{{ volume.volume_right }}
+{% else %}
+      - {{ volume.volume_path }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if container.labels is defined %}
+    labels:
+{% for label in container.labels %}
+      - {{ label }}
+{% endfor %}
+{% endif %}
+{% if container.ports is defined %}
+    ports:
+{% for port in container.ports %}
+      - {{ port }}
+{% endfor %}
+{% endif %}
+{% if container.expose is defined %}
+    expose:
+{% for expose_ports in container.expose %}
+      - {{ expose_ports }}
+{% endfor %}
+{% endif %}
+{% if ( container.environment is defined ) or ( container.include_global_env_vars is defined and container.include_global_env_vars) %}
+    environment:
+{% if container.include_global_env_vars | default(false) %}
+{% for global_var in global_env_vars %}
+      - {{ global_var }}
+{% endfor %}
+{% endif %}
+{% if container.environment is defined %}
+{% for env_var in container.environment %}
+      - {{ env_var }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.depends_on is defined %}
+    depends_on:
+{% for dependent in container.depends_on %}
+      - {{ dependent }}
+{% endfor %}
+{% endif %}
+{% if container.hostname is defined %}
+    hostname: {{ container.hostname }}
+{% endif %}
+{% if container.mem_limit is defined %}
+    mem_limit: {{ container.mem_limit }}
+{% endif %}
+{% if container.command is defined %}
+{% if container.command is string %}
+    command: {{ container.command }}
+{% else %}
+    command:
+{% for command in container.command %}
+      - {{ command }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.security_opt is defined %}
+    security_opt:
+{% for sec_opt in container.security_opt %}
+      - {{ sec_opt }}
+{% endfor %}
+{% endif %}
+{% if container.sysctl is defined %}
+    sysctls:
+{% for param in container.sysctl %}
+      - {{ param }}
+{% endfor %}
+{% endif %}
+{% if container.shm_size is defined %}
+    shm_size: {{ container.shm_size }}
+{% endif %}
+{% if container.ulimits is defined %}
+    ulimits:
+{% if container.ulimits.nproc is defined %}
+      nproc: {{ container.ulimits.nproc }}
+{% endif %}
+{% if container.ulimits.nofile is defined %}
+      nofile:
+{% for param, value in container.ulimits.nofile.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% if container.ulimits.memlock is defined %}
+      memlock:
+{% for param, value in container.ulimits.memlock.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.tmpfs is defined %}
+    tmpfs:
+{% for item in container.tmpfs %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% if container.dns is defined %}
+    dns:
+{% for dns_entry in container.dns %}
+      - {{ dns_entry }}
+{% endfor %}
+{% endif %}
+{% if container.logging.driver is defined %}
+    logging:
+      driver: {{ container.logging.driver }}
+{% if container.logging.options is defined %}
+      options:
+{% for option in container.logging.options %}
+        {{ option }}: {{ container.logging.options[option] }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.env_file is defined %}
+    env_file:
+{% for envfile in container.env_file %}
+      - {{ envfile }}
+{% endfor %}
+{% endif %}
+{% if container.user is defined %}
+    user: {{ container.user }}
+{% endif %}
+{% if container.restart is defined %}
+    restart: {{ container.restart }}
+{% endif %}
+{% if container.deploy is defined %}
+    deploy:
+{% if container.deploy['replicas'] is defined %}
+      replicas: {{ container.deploy['replicas'] }}
+{% endif %}
+{% if container.deploy['restart_policy'] is defined %}
+      restart_policy:
+{% if container.deploy['restart_policy']['condition'] is defined %}
+        condition: {{ container.deploy['restart_policy']['condition'] }}
+{% endif %}
+{% if container.deploy['restart_policy']['delay'] is defined %}
+        delay: {{ container.deploy['restart_policy']['delay'] }}
+{% endif %}
+{% if container.deploy['restart_policy']['max_attempts'] is defined %}
+        max_attempts: {{ container.deploy['restart_policy']['max_attempts'] }}
+{% endif %}
+{% if container.deploy['restart_policy']['window'] is defined %}
+        window: {{ container.deploy['restart_policy']['window'] }}
+{% endif %}
+{% endif %}
+{% if container.deploy['resources'] is defined %}
+      resources:
+{% if container.deploy['resources']['limits'] is defined %}
+        limits:
+{% if container.deploy['resources']['limits']['cpus'] is defined %}
+          cpus: "{{ container.deploy['resources']['limits']['cpus']|string }}"
+{% endif %}
+{% if container.deploy['resources']['limits']['memory'] is defined %}
+          memory: {{ container.deploy['resources']['limits']['memory'] }}
+{% endif %}
+{% endif %}
+{% if container.deploy['resources']['reservations'] is defined %}
+        reservations:
+{% if container.deploy['resources']['reservations']['cpus'] is defined %}
+          cpus: "{{ container.deploy['resources']['reservations']['cpus']|string }}"
+{% endif %}
+{% if container.deploy['resources']['reservations']['memory'] is defined %}
+          memory: {{ container.deploy['resources']['reservations']['memory'] }}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+##########################################################
+##################    Networks    ########################
+##########################################################
+
+{% if docker_compose_networks and docker_compose_networks is iterable %}
+networks:
+{% for network in docker_compose_networks %}
+    {{ network.name }}:
+        name: {{ network.name }}
+{% if network.external is defined %}
+        external: {{ network.external }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+##########################################################
+##################    Volumes    #########################
+##########################################################
+
+{% if docker_compose_volumes and docker_compose_volumes is iterable %}
+volumes:
+{% for volume in docker_compose_volumes %}
+    {{ volume.name }}:
+        name: {{ volume.name }}
+{% if volume.driver is defined %}
+        driver: {{ volume.driver }}
+{% endif %}
+{% endfor %}
+{% endif %}

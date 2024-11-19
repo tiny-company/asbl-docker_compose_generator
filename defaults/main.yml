@@ -1,0 +1,109 @@
+---
+###################################################
+## docker_compose_generator role vars
+###################################################
+
+## root username (default is root)
+root_user: "root"
+
+## ==================
+## docker_compose_generator user and path
+docker_compose_generator_user: "ansible"
+docker_compose_generator_group: "docker"
+docker_compose_generator_output_path: "/opt/webdrone"
+
+## ==================
+## docker_compose_generator start
+docker_compose_generator_start: true
+
+## ==================
+## set_dockerhub vars
+docker_set_dockerhub: true
+# docker_user:
+# dockerhub_password:
+
+## ==================
+## docker_compose_generator definition
+
+## global vars
+## vars common to all docker compose services
+global_env_vars: []
+  # - "PUID=1313"
+  # - "PGID=1313"
+appdata_path: /opt/appdata
+container_config_path: /config
+container_data_path: /data
+
+## network definition
+docker_compose_networks: []
+#  - name: wd_network
+#    external: true
+
+## volume definition
+docker_compose_volumes: []
+#  - name: letsencrypt_volume
+#    driver: local
+
+
+## container definitions
+containers:
+  # - service_name: letsencrypt
+  #   active: true
+  #   image: linuxserver/letsencrypt
+  #   container_name: le
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  # - {volume_path: "{{ appdata_path }}/letsencrypt/config:{{ container_config_path }}", volume_user: "1000", volume_map_type: "folder", volume_right: "ro"}
+  # - {volume_path: "letsencrypt_volume:{{ container_config_path }}", volume_user: "1000", volume_map_type: "volume"}
+  #   restart: always
+  #   depends_on:
+  #     - unifi
+  #     - nextcloud
+  #     - quassel
+  #   include_global_env_vars: true
+  #   environment:
+  #     - EMAIL=email@email.com
+  #     - URL=some.tld
+  #     - SUBDOMAINS=nc, irc, unifi
+  #     - ONLY_SUBDOMAINS=true
+  #     - DHLEVEL=4096
+  #     - TZ=Europe/London
+  #     - VALIDATION=http
+  #   mem_limit: 256m
+
+  # - service_name: nextcloud
+  #   active: true
+  #   image: nextcloud
+  #   container_name: nextcloud
+  #   include_global_env_vars: false
+  #   mem_limit: 256m
+  #   restart: "{{ unless_stopped }}"
+  #   ports:
+  #     - "8081:80"
+
+  # - service_name: quassel
+  #   active: true
+  #   image: linuxserver/quassel
+  #   container_name: quassel
+  #   include_global_env_vars: true
+  #   mem_limit: 128m
+  #   expose:
+  #     - "4343"
+  #   ports:
+  #     - "4242:4242"
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: on-failure
+  #       delay: 5s
+  #       max_attempts: 3
+  #       window: 120s
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 50M
+  #       reservations:
+  #         cpus: '0.25'
+  #         memory: 20M

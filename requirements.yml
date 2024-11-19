@@ -1,0 +1,16 @@
+---
+
+roles:
+  - name: docker_compose_generator
+    scm: git
+    src: git@github.com:webdrone-infra/asbl-docker_compose_generator.git
+    version: main
+
+  - name: pip_packages_install
+    scm: git
+    src: git@github.com:webdrone-infra/asbl-pip_packages_install.git
+    version: main
+
+collections:
+  - name: community.general
+  - name: community.docker

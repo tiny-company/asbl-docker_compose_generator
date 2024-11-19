@@ -1,0 +1,9 @@
+---
+
+- name: Install docker_compose_generator playbook
+  hosts: all
+  roles:
+    - role: docker_compose_generator
+      become: true
+      become_user: "{{ docker_compose_generator_user }}"
+      tags: [docker_compose_generator]

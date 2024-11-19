@@ -1,0 +1,64 @@
+---
+# Description : generate docker-compose.yml file
+# file : main.yml
+
+- name: ensure destination for compose folder exists
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.file:
+    path: "{{ docker_compose_generator_output_path }}"
+    state: directory
+
+- name: ensure destination for compose file exists
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.stat:
+    path: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
+  register: docker_compose_file
+
+- name: backup docker-compose file
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.copy:
+    src: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
+    dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml.bak"
+    remote_src: yes
+  when: docker_compose_file.stat.exists
+
+- name: write docker-compose file
+  become: true
+  become_user: "{{ root_user }}"
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
+    owner: "{{ docker_compose_generator_user }}"
+    group: "{{ docker_compose_generator_group }}"
+
+# fix volume right
+- import_tasks: _fix_volume_right.yml
+  tags: [_fix_volume_right]
+
+# - name: Run 'docker-compose up'
+#   community.docker.docker_compose:
+#     project_src: "{{ docker_compose_generator_output_path }}"
+#     build: false
+#   register: docker_compose_status
+#   when: docker_compose_generator_start
+
+# make sure dockerhub ids are configured (docker login) to avoid docker pull errors
+- import_tasks: _set_docker_hub.yml
+  tags: [_set_docker_hub]
+  when: docker_set_dockerhub
+
+- name: Run 'docker-compose up'
+  ansible.builtin.command:
+    cmd: "docker compose -f {{ docker_compose_generator_output_path }}/docker-compose.yml up -d"
+  register: docker_compose_status
+  when: docker_compose_generator_start
+
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: docker_compose_status
+#   when: docker_compose_generator_start
+
+

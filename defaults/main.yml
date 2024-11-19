@@ -14,7 +14,10 @@ docker_compose_generator_output_path: "/opt/webdrone"
 
 ## ==================
 ## docker_compose_generator start
+## if true it will start docker-compose if false, don't start docker-compose (just generate file)
 docker_compose_generator_start: true
+## if true it will show docker-compose status at the end of ansible playbbok
+docker_compose_show_status: true
 
 ## ==================
 ## set_dockerhub vars
@@ -44,8 +47,7 @@ docker_compose_volumes: []
 #  - name: letsencrypt_volume
 #    driver: local
 
-
-## container definitions
+## container definitions (same format as docker-compose.yml)
 containers:
   # - service_name: letsencrypt
   #   active: true

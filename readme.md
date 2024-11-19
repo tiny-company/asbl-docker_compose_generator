@@ -2,7 +2,11 @@
 
 ## Description
 
-This repo contain the ansible role that generate docker-compose file from template.
+This repo contain the ansible role that generate docker-compose file from template :
+- connect to dockerhub using docker login (in order to avoid docker pull on private registry).
+- fix ownership and right on volume files.
+- create docker-compose.yml file from template.
+- launch docker compose (using )
 
 ## Prerequisite
 
@@ -29,6 +33,8 @@ ansible-galaxy install -r requirements.yml
 ```
 ansible-galaxy collection install https://github.com/tiny-company/<repository_name>.git
 ```
+
+- finally use role in playbook : [see test_playbook example](./test_playbook.yml)
 
 ### Variables
 

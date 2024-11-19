@@ -38,13 +38,6 @@
 - import_tasks: _fix_volume_right.yml
   tags: [_fix_volume_right]
 
-# - name: Run 'docker-compose up'
-#   community.docker.docker_compose:
-#     project_src: "{{ docker_compose_generator_output_path }}"
-#     build: false
-#   register: docker_compose_status
-#   when: docker_compose_generator_start
-
 # make sure dockerhub ids are configured (docker login) to avoid docker pull errors
 - import_tasks: _set_docker_hub.yml
   tags: [_set_docker_hub]
@@ -56,9 +49,11 @@
   register: docker_compose_status
   when: docker_compose_generator_start
 
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: docker_compose_status
-#   when: docker_compose_generator_start
+- name: Show results
+  ansible.builtin.debug:
+    var: docker_compose_status
+  when:
+    - docker_compose_generator_start
+    - docker_compose_show_status
 
 

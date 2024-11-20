@@ -87,7 +87,7 @@ services:
 {% endfor %}
 {% endif %}
 {% if container.environment is defined %}
-{% for env_var in container.environment %}
+{% for env_var in container.environment | dict2items %}
       - {{ env_var.key }}: {{ env_var.value }}
 {% endfor %}
 {% endif %}

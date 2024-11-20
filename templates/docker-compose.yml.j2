@@ -1,5 +1,4 @@
 ---
-version: "{{ compose_schema_version | default('2') }}"
 services:
 {% for container in containers %}
 {% if container.active %}

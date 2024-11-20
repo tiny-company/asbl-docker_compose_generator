@@ -33,9 +33,6 @@ docker_set_dockerhub: true
 global_env_vars: []
   # - "PUID=1313"
   # - "PGID=1313"
-appdata_path: /opt/appdata
-container_config_path: /config
-container_data_path: /data
 
 ## network definition
 docker_compose_networks: []

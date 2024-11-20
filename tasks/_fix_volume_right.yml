@@ -39,4 +39,6 @@
     path: "{{ item.volume_path | split(':') | first }}"
     owner: "{{ item.volume_user }}"
   loop: "{{ volume_list }}"
-  when: volume_list is defined
+  when:
+    - volume_list is defined
+    - item.volume_map_type != "volume"

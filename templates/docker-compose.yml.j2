@@ -93,6 +93,28 @@ services:
 {% endfor %}
 {% endif %}
 {% endif %}
+
+{% if container.healthcheck is defined %}
+    healthcheck:
+{% if container.healthcheck['test'] is defined %}
+{% if container.healthcheck['test'] is iterable %}
+      test: {{ container.healthcheck['test'] }}
+{% endif %}
+{% endif %}
+{% if container.healthcheck['interval'] is defined %}
+      interval: {{ container.healthcheck['interval'] }}
+{% endif %}
+{% if container.healthcheck['timeout'] is defined %}
+      timeout: {{ container.healthcheck['timeout'] }}
+{% endif %}
+{% if container.healthcheck['retries'] is defined %}
+      retries: {{ container.healthcheck['retries'] }}
+{% endif %}
+{% if container.healthcheck['start_period'] is defined %}
+      start_period: {{ container.healthcheck['start_period'] }}
+{% endif %}
+{% endif %}
+
 {% if container.depends_on is defined %}
     depends_on:
 {% for dependent in container.depends_on %}

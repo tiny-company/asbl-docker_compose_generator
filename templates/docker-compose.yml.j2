@@ -92,7 +92,6 @@ services:
 {% endfor %}
 {% endif %}
 {% endif %}
-
 {% if container.healthcheck is defined %}
     healthcheck:
 {% if container.healthcheck['test'] is defined %}
@@ -113,7 +112,6 @@ services:
       start_period: {{ container.healthcheck['start_period'] }}
 {% endif %}
 {% endif %}
-
 {% if container.depends_on is defined %}
     depends_on:
 {% for dependent in container.depends_on %}

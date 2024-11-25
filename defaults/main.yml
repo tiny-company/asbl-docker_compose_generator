@@ -14,6 +14,8 @@ docker_compose_generator_output_path: "/opt/webdrone"
 
 ## ==================
 ## docker_compose_generator start
+## if true it will delete all item (container, network) from previous docker-compose (to avoid error with existing items)
+docker_compose_old_compose_item_purge: false
 ## if true it will start docker-compose if false, don't start docker-compose (just generate file)
 docker_compose_generator_start: true
 ## if true it will show docker-compose status at the end of ansible playbbok

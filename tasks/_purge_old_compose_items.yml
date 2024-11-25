@@ -1,0 +1,26 @@
+# Description : delete all items (container, network) from previous docker-compose (to avoid error with existing items)
+# file : _purge_old_compose_items.yml
+
+- name: List all Docker containers
+  community.docker.docker_container:
+    state: present
+  register: docker_containers
+
+- name: Stop and remove all existing container
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker_containers.containers | map(attribute='Id') | list }}"
+  when: docker_containers.containers | length > 0
+
+- name: List all Docker networks
+  community.docker.docker_network:
+    state: present
+  register: docker_networks
+
+- name: Remove all Docker networks
+  community.docker.docker_network:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker_networks.networks | map(attribute='Name') | list }}"
+  when: docker_networks.networks | length > 0

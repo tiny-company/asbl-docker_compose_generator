@@ -43,6 +43,12 @@
   tags: [_set_docker_hub]
   when: docker_set_dockerhub
 
+- import_tasks: _purge_old_compose_items.yml
+  tags: [_purge_old_compose_items]
+  when: docker_compose_old_compose_item_purge
+
+
+
 - name: Run 'docker-compose up'
   ansible.builtin.command:
     cmd: "docker compose -f {{ docker_compose_generator_output_path }}/docker-compose.yml up -d"

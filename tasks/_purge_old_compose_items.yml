@@ -1,21 +1,17 @@
 # Description : delete all items (container, network) from previous docker-compose (to avoid error with existing items)
 # file : _purge_old_compose_items.yml
 
-- name: Gather Docker container facts
-  community.docker.docker_container_facts:
+- name: Get docker container list
+  command: docker ps -aq
+  register: docker_container_list
 
-- name: Remove all Docker containers
-  community.docker.docker_container:
-    name: "{{ item }}"
-    state: absent
-  loop: "{{ ansible_docker_containers | map(attribute='Name') | list }}"
+- debug: msg="{{docker_container_list}}"
 
-- name: Gather Docker network facts
-  community.docker.docker_network_facts:
+# - name: Remove all Docker containers
+#   community.docker.docker_container:
+#     name: "{{ item }}"
+#     state: absent
+#   loop: "{{ ansible_docker_containers | map(attribute='Name') | list }}"
 
-- name: Remove all Docker networks
-  community.docker.docker_network:
-    name: "{{ item }}"
-    state: absent
-  loop: "{{ ansible_docker_networks | map(attribute='Name') | list }}"
-  when: item not in ['bridge', 'host', 'none']
+- name: Prune Docker networks
+  command: docker network prune -f

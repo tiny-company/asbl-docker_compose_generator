@@ -5,13 +5,11 @@
   command: docker ps -aq
   register: docker_container_list
 
-- debug: msg="{{docker_container_list}}"
-
-# - name: Remove all Docker containers
-#   community.docker.docker_container:
-#     name: "{{ item }}"
-#     state: absent
-#   loop: "{{ ansible_docker_containers | map(attribute='Name') | list }}"
+- name: Remove all Docker containers
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker_container_list.stdout_lines }}"
 
 - name: Prune Docker networks
   command: docker network prune -f

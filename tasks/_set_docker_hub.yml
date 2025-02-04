@@ -5,14 +5,14 @@
 - name: assert docker registry credentials are defined
   ansible.builtin.assert:
     that:
-      - "dockerhub_username is defined and dockerhub_username|length > 0"
-      - "dockerhub_password is defined and dockerhub_password|length > 0"
-    fail_msg: "'dockerhub_username' or 'dockerhub_password' vars is empty"
+      - "docker_compose_registry_username is defined and docker_compose_registry_username|length > 0"
+      - "docker_compose_registry_password is defined and docker_compose_registry_password|length > 0"
+    fail_msg: "'docker_compose_registry_username' or 'docker_compose_registry_password' vars is empty"
 
 - name: Log into docker registry and force re-authorization
   community.docker.docker_login:
-    registry_url: "{{ dockerl_registry_url | d('https://index.docker.io/v1/') }}"
-    username: "{{ dockerhub_username }}"
-    password: "{{ dockerhub_password }}"
+    registry_url: "{{ docker_compose_registry_url | d('https://index.docker.io/v1/') }}"
+    username: "{{ docker_compose_registry_username }}"
+    password: "{{ docker_compose_registry_password }}"
     reauthorize: true
-  when: docker_user and dockerhub_password
+  when: docker_user and docker_compose_registry_password

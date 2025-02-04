@@ -24,8 +24,9 @@ docker_compose_show_status: true
 ## ==================
 ## set_dockerhub vars
 docker_compose_set_dockerhub: false
-# docker_user:
-# dockerhub_password:
+# docker_compose_registry_username:
+# docker_compose_registry_password:
+# docker_compose_registry_url:
 
 ## ==================
 ## docker_compose_generator definition

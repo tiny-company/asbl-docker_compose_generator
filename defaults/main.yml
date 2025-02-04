@@ -23,7 +23,7 @@ docker_compose_show_status: true
 
 ## ==================
 ## set_dockerhub vars
-docker_set_dockerhub: true
+docker_compose_set_dockerhub: false
 # docker_user:
 # dockerhub_password:
 

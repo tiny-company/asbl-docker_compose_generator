@@ -41,7 +41,7 @@
 # make sure dockerhub ids are configured (docker login) to avoid docker pull errors
 - import_tasks: _set_docker_hub.yml
   tags: [_set_docker_hub]
-  when: docker_set_dockerhub
+  when: docker_compose_set_dockerhub
 
 - import_tasks: _purge_old_compose_items.yml
   tags: [_purge_old_compose_items]
